@@ -66,9 +66,15 @@ class ParsedUrl implements ParsedUrlInterface
             $parsedUrl = parse_url($url);
         }
 
-        if ($parsedUrl === false) {
-            throw new InvalidArgumentException('url');
-        }
+	if ($url == 'file://') {
+		$parsedUrl = [
+			'scheme' => 'http',
+			'host' => 'annobase.api',
+			'port' => 80
+		];
+  	} else if ($parsedUrl === false && $url != 'file://') {
+		throw new InvalidArgumentException('url');
+        };
 
         $this->scheme = $this->getArrayValue($parsedUrl, self::URL_KEY_SCHEME);
         $this->host   = $this->getArrayValue($parsedUrl, self::URL_KEY_HOST);
